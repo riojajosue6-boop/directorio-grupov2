@@ -36,6 +36,24 @@ async function cargarGrupos() {
     }
 }
 
+// --- LO NUEVO INSERTADO AQUÍ ---
+
+// Función para llenar el selector de categorías
+function llenarCategorias() {
+    const cats = ["Amistad", "Ventas", "Juegos", "Educación", "Tecnología"];
+    const selectCat = document.getElementById('categoria');
+    
+    if(selectCat) {
+        selectCat.innerHTML = '<option value="" disabled selected>Selecciona una categoría</option>';
+        cats.forEach((cat, i) => {
+            let opt = document.createElement('option');
+            opt.value = i + 1;
+            opt.textContent = cat;
+            selectCat.appendChild(opt);
+        });
+    }
+}
+
 // Guardar grupo
 formGrupo.onsubmit = async (e) => {
     e.preventDefault();
@@ -64,4 +82,8 @@ formGrupo.onsubmit = async (e) => {
     }
 };
 
-window.onload = cargarGrupos;
+// Activar todo al cargar
+window.onload = () => {
+    llenarCategorias();
+    cargarGrupos();
+};
