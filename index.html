@@ -1,1 +1,91 @@
-hola
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Directorio Universal de Grupos</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <nav>
+            <div class="logo">MundoGrupos</div>
+            <button id="btnAbrirForm" class="btn-principal">
+                <span class="material-icons">add_circle</span> Subir Grupo
+            </button>
+        </nav>
+        <div class="hero">
+            <h1>Encuentra tu comunidad ideal</h1>
+            <div class="search-bar">
+                <input type="text" id="buscador" placeholder="Buscar por nombre, país o etiqueta...">
+                <span class="material-icons">search</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <aside class="filtros">
+            <h3>Filtrar por:</h3>
+            <div class="botones-plataforma">
+                <button class="filtro-btn active" data-plataforma="todos">Todos</button>
+                <button class="filtro-btn" data-plataforma="whatsapp">WhatsApp</button>
+                <button class="filtro-btn" data-plataforma="telegram">Telegram</button>
+                <button class="filtro-btn" data-plataforma="discord">Discord</button>
+            </div>
+        </aside>
+
+        <section id="contenedor-grupos" class="grid-grupos">
+            <div class="cargando">Cargando grupos...</div>
+        </section>
+    </main>
+
+    <div id="modalForm" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Publicar nuevo grupo</h2>
+            <p class="nota-legal">Al publicar, aceptas que el contenido es legal y respetuoso.</p>
+            
+            <form id="formGrupo">
+                <label>Nombre del Grupo</label>
+                <input type="text" id="nombre" required placeholder="Ej: Amantes del Cine">
+
+                <label>Plataforma</label>
+                <select id="plataforma" required>
+                    <option value="1">WhatsApp</option>
+                    <option value="2">Telegram</option>
+                    <option value="3">Discord</option>
+                </select>
+
+                <label>Enlace de Invitación</label>
+                <input type="url" id="link" required placeholder="https://chat.whatsapp.com/...">
+
+                <label>Categoría</label>
+                <select id="categoria" required>
+                    </select>
+
+                <label>País</label>
+                <input type="text" id="pais" placeholder="Ej: Bolivia, México, Global">
+
+                <label>Descripción</label>
+                <textarea id="descripcion" rows="3" placeholder="¿De qué trata el grupo?"></textarea>
+
+                <div class="check-legal">
+                    <input type="checkbox" id="acepto" required>
+                    <label for="acepto">Certifico que este grupo cumple con las normas legales.</label>
+                </div>
+
+                <button type="submit" class="btn-enviar">Publicar Grupo</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Directorio Universal - Este sitio es un índice independiente y no está afiliado a Meta, Telegram o Discord.</p>
+        <p><small>Los usuarios son responsables de los enlaces compartidos.</small></p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
