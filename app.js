@@ -1,5 +1,5 @@
 // CONFIGURACIÓN DE CONEXIÓN
-const DATABASE_URL = 'https://tu-proyecto-railway.up.railway.app'; // Esto lo ajustaremos al final
+const DATABASE_URL = 'https://directorio-grupov2-production.up.railway.app';// Esto lo ajustaremos al final
 
 // Elementos de la Interfaz
 const contenedor = document.getElementById('contenedor-grupos');
