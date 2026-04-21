@@ -40,7 +40,7 @@ async function cargarGrupos() {
 
 // Función para llenar el selector de categorías
 function llenarCategorias() {
-    const cats = ["Amistad", "Ventas","Musica","Libros","Peliculas","Educación","Games", "Educación","Tecnología","Educación",];
+    const cats = ["Amistad", "Ventas","Musica","Libros","Peliculas","Educación","Games", "Animales","Tecnología","Adultos","otros,];
     const selectCat = document.getElementById('categoria');
     
     if(selectCat) {
