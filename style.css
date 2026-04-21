@@ -162,15 +162,23 @@ main {
 }
 
 .modal-content {
-    background: var(--card-bg);
-    margin: 2% auto; /* Bajamos el margen para que no empiece tan abajo */
-    padding: 2rem;
-    width: 95%;
+    background: #1e293b;
+    margin: 5% auto;
+    padding: 20px;
+    width: 90%;
     max-width: 500px;
-    border-radius: 15px;
-    max-height: 90vh; /* Que no ocupe más del 90% de la altura de la pantalla */
-    overflow-y: auto; /* ¡ESTO ES LO IMPORTANTE! Permite bajar con el ratón dentro del cuadro */
+    border-radius: 12px;
+    max-height: 85vh; /* Evita que se salga de la pantalla */
+    overflow-y: auto; /* Permite scroll interno */
     position: relative;
+}
+/* Estilo para el Checkbox */
+.check-legal {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0;
+    font-size: 0.85rem;
 }
 
 form label { display: block; margin-top: 15px; font-size: 0.9rem; }
