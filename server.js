@@ -7,23 +7,26 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// CONFIGURACIÓN CLAVE PARA CONEXIÓN PÚBLICA
+// Configuración de la conexión a Postgres
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: {
-        rejectUnauthorized: false // Esto evita que Railway bloquee la conexión externa
+        rejectUnauthorized: false // REQUERIDO para conexiones externas en Railway
     }
 });
 
+// RUTA: Obtener solo grupos aprobados
 app.get('/grupos', async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM grupos WHERE estado = $1', ['aprobado']);
         res.json(result.rows);
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        console.error("Error en GET /grupos:", err);
+        res.status(500).json({ error: "Error al obtener datos" });
     }
 });
 
+// RUTA: Guardar nuevo grupo (entra como pendiente)
 app.post('/grupos', async (req, res) => {
     const { nombre, descripcion, link, pais, plataforma_id, categoria_id } = req.body;
     try {
@@ -33,9 +36,10 @@ app.post('/grupos', async (req, res) => {
         );
         res.json({ success: true });
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        console.error("Error en POST /grupos:", err);
+        res.status(500).json({ error: "Error al guardar el grupo" });
     }
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Servidor en puerto ${PORT}`));
+app.listen(PORT, () => console.log(`Servidor listo en puerto ${PORT}`));
