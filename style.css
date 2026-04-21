@@ -163,11 +163,14 @@ main {
 
 .modal-content {
     background: var(--card-bg);
-    margin: 5% auto;
+    margin: 2% auto; /* Bajamos el margen para que no empiece tan abajo */
     padding: 2rem;
-    width: 90%;
+    width: 95%;
     max-width: 500px;
     border-radius: 15px;
+    max-height: 90vh; /* Que no ocupe más del 90% de la altura de la pantalla */
+    overflow-y: auto; /* ¡ESTO ES LO IMPORTANTE! Permite bajar con el ratón dentro del cuadro */
+    position: relative;
 }
 
 form label { display: block; margin-top: 15px; font-size: 0.9rem; }
