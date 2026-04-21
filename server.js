@@ -7,26 +7,23 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Conexión mejorada para URLs públicas
+// CONFIGURACIÓN CLAVE PARA CONEXIÓN PÚBLICA
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: {
-        rejectUnauthorized: false // Esto permite la conexión segura con Railway desde afuera
+        rejectUnauthorized: false // Esto evita que Railway bloquee la conexión externa
     }
 });
 
-// Ruta para obtener grupos
 app.get('/grupos', async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM grupos WHERE estado = $1', ['aprobado']);
         res.json(result.rows);
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Error al obtener grupos" });
+        res.status(500).json({ error: err.message });
     }
 });
 
-// Ruta para guardar grupos
 app.post('/grupos', async (req, res) => {
     const { nombre, descripcion, link, pais, plataforma_id, categoria_id } = req.body;
     try {
@@ -36,10 +33,9 @@ app.post('/grupos', async (req, res) => {
         );
         res.json({ success: true });
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Error al guardar en la base de datos" });
+        res.status(500).json({ error: err.message });
     }
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Servidor activo en puerto ${PORT}`));
+app.listen(PORT, () => console.log(`Servidor en puerto ${PORT}`));
