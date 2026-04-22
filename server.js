@@ -41,5 +41,10 @@ app.post('/grupos', async (req, res) => {
     }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Servidor listo en puerto ${PORT}`));
+// Usamos el puerto que Railway nos dé, y si no hay ninguno, el 8080 por defecto
+const PORT = process.env.PORT || 8080;
+
+// Agregamos '0.0.0.0' para que el servidor acepte conexiones externas
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Servidor activo y escuchando en el puerto ${PORT}`);
+});
