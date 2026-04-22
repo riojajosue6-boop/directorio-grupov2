@@ -4,29 +4,38 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-app.use(cors());
+
+// Configuración de CORS ultra-reforzada
+app.use(cors({
+    origin: '*', // Esto permite que cualquier sitio (incluyendo tu GitHub) se conecte
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type']
+}));
+
 app.use(express.json());
 
-// Configuración de la conexión a Postgres
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: {
-        rejectUnauthorized: false // REQUERIDO para conexiones externas en Railway
+        rejectUnauthorized: false
     }
 });
 
-// RUTA: Obtener solo grupos aprobados
+// Ruta de prueba para saber si el motor responde
+app.get('/', (req, res) => {
+    res.send('Servidor de MundoGrupos funcionando correctamente');
+});
+
 app.get('/grupos', async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM grupos WHERE estado = $1', ['aprobado']);
         res.json(result.rows);
     } catch (err) {
-        console.error("Error en GET /grupos:", err);
+        console.error(err);
         res.status(500).json({ error: "Error al obtener datos" });
     }
 });
 
-// RUTA: Guardar nuevo grupo (entra como pendiente)
 app.post('/grupos', async (req, res) => {
     const { nombre, descripcion, link, pais, plataforma_id, categoria_id } = req.body;
     try {
@@ -36,15 +45,12 @@ app.post('/grupos', async (req, res) => {
         );
         res.json({ success: true });
     } catch (err) {
-        console.error("Error en POST /grupos:", err);
+        console.error(err);
         res.status(500).json({ error: "Error al guardar el grupo" });
     }
 });
 
-// Usamos el puerto que Railway nos dé, y si no hay ninguno, el 8080 por defecto
 const PORT = process.env.PORT || 8080;
-
-// Agregamos '0.0.0.0' para que el servidor acepte conexiones externas
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Servidor activo y escuchando en el puerto ${PORT}`);
+    console.log(`Servidor activo en puerto ${PORT}`);
 });
