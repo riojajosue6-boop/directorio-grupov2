@@ -70,28 +70,41 @@ function llenarCategorias() {
 // Guardar grupo
 formGrupo.onsubmit = async (e) => {
     e.preventDefault();
+
+    const link = document.getElementById('link').value;
+    let plataforma_id = 1; // Por defecto WhatsApp
+
+    // Detección automática de plataforma
+    if (link.includes('t.me')) plataforma_id = 2;
+    else if (link.includes('discord')) plataforma_id = 3;
+
     const datos = {
         nombre: document.getElementById('nombre').value,
-        plataforma_id: parseInt(document.getElementById('plataforma').value),
-        link: document.getElementById('link').value,
-        categoria_id: parseInt(document.getElementById('categoria').value),
+        plataforma_id: plataforma_id,
+        link: link,
+        categoria_id: parseInt(document.getElementById('categoria').value) || 1,
         pais: document.getElementById('pais').value,
-        descripcion: document.getElementById('descripcion').value
+        descripcion: document.getElementById('descripcion').value || ""
     };
 
     try {
         const response = await fetch(`${API_URL}/grupos`, {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(datos)
         });
+
         if (response.ok) {
-            alert("¡Enviado! Aparecerá tras la revisión del admin.");
+            alert("¡Enviado con éxito! Aparecerá tras ser aprobado.");
             modal.style.display = "none";
             formGrupo.reset();
+        } else {
+            // Esto nos dirá el error exacto en un alert
+            const errorText = await response.text();
+            alert("Error del servidor: " + errorText);
         }
     } catch (err) {
-        alert("No se pudo conectar con el servidor.");
+        alert("Error de conexión: " + err.message);
     }
 };
 
