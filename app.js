@@ -53,7 +53,7 @@ function llenarPaises() {
 
 // Función para llenar el selector de categorías
 function llenarCategorias() {
-    const cats = ["Amistad", "Ventas", "Musica", "Libros", "Peliculas", "Educación", "Games", "Animales", "Tecnología", "Adultos", "Otros"];
+    const cats = ["Amistad", "Ventas", "Juegos", "Educacion", "Tecnologia"];
     const selectCat = document.getElementById('categoria');
     
     if(selectCat) {
