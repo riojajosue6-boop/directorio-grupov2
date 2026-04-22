@@ -1,5 +1,5 @@
 // USA TU URL REAL DE RAILWAY AQUÍ
-const API_URL = 'https://directorio-grupov2-production.up.railway.app/';
+const API_URL = 'https://directorio-grupov2-production.up.railway.app';
 
 const contenedor = document.getElementById('contenedor-grupos');
 const formGrupo = document.getElementById('formGrupo');
