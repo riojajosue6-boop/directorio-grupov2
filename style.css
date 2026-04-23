@@ -303,3 +303,27 @@ footer {
 .card.wa .platform-icon {
     border-radius: 50%;
 }
+/* --- AJUSTES PARA LOGO DE WHATSAPP (IMAGEN) --- */
+
+/* Contenedor para alinear icono/imagen perfectamente */
+.icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;  /* Ancho fijo igual al tamaño estándar de un icono */
+    height: 24px; /* Alto fijo igual al tamaño estándar de un icono */
+}
+
+/* Estilo para la imagen del logo */
+.platform-logo-img {
+    width: 22px;  /* Un poco más pequeño que el contenedor para que no se pegue */
+    height: 22px; /* Mismo alto para mantener proporción circular */
+    object-fit: contain; /* Asegura que la imagen no se deforme */
+    opacity: 0.9; /* Un toque de transparencia para integrarlo mejor */
+}
+
+/* Alineación de los iconos de Material Icons existentes */
+.platform-icon {
+    font-size: 22px !important; /* Mismo tamaño que la imagen */
+    color: #cbd5e1; /* Color gris suave por defecto */
+}
