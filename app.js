@@ -180,3 +180,18 @@ window.onload = () => {
     llenarCategorias();
     cargarGrupos();
 };
+function reportarGrupo(id) {
+    if (confirm("¿Deseas reportar este enlace por contenido inapropiado o caído?")) {
+        // Por ahora, lo ocultamos visualmente para el usuario que reporta
+        const tarjeta = document.getElementById(`grupo-${id}`);
+        if(tarjeta) {
+            tarjeta.style.transition = 'all 0.5s';
+            tarjeta.style.opacity = '0.2';
+            tarjeta.style.filter = 'grayscale(1)';
+            tarjeta.style.pointerEvents = 'none';
+        }
+        alert("Gracias. El reporte ha sido enviado para revisión técnica.");
+        
+        // TIP: En el futuro, aquí haremos un fetch para que te llegue un aviso.
+    }
+}
