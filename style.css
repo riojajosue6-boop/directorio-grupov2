@@ -120,23 +120,42 @@ main {
     gap: 1.5rem;
 }
 
+/* --- PUNTO 1: ESTÉTICA DE LAS CARDS --- */
 .card {
     background: var(--card-bg);
     border-radius: 12px;
     padding: 1.5rem;
-    border-top: 4px solid var(--primary);
-    transition: transform 0.3s;
+    border-top: 5px solid #64748b; /* Color base */
+    transition: transform 0.3s, box-shadow 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .card:hover {
     transform: translateY(-5px);
 }
 
-.card.wa { border-top-color: var(--whatsapp); }
-.card.tg { border-top-color: var(--telegram); }
-.card.dc { border-top-color: var(--discord); }
+/* Colores específicos por plataforma */
+.card.wa { 
+    border-top-color: var(--whatsapp); 
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.1);
+}
+.card.wa .btn-unirse { background: var(--whatsapp); }
 
-.card h4 { margin-bottom: 0.5rem; }
+.card.tg { 
+    border-top-color: var(--telegram); 
+    box-shadow: 0 4px 15px rgba(0, 136, 204, 0.1);
+}
+.card.tg .btn-unirse { background: var(--telegram); }
+
+.card.dc { 
+    border-top-color: var(--discord); 
+    box-shadow: 0 4px 15px rgba(88, 101, 242, 0.1);
+}
+.card.dc .btn-unirse { background: var(--discord); }
+
+.card h4 { margin-bottom: 0.5rem; color: var(--text); }
 .card p { font-size: 0.9rem; color: #94a3b8; margin-bottom: 1rem; }
 
 .btn-unirse {
@@ -147,9 +166,16 @@ main {
     background: var(--primary);
     color: white;
     text-decoration: none;
-    border-radius: 6px;
+    border-radius: 8px;
     font-weight: bold;
+    transition: filter 0.2s;
 }
+
+.btn-unirse:hover {
+    filter: brightness(1.1);
+}
+
+/* --- FIN PUNTO 1 --- */
 
 /* Modales y Formularios */
 .modal {
@@ -168,11 +194,11 @@ main {
     width: 90%;
     max-width: 500px;
     border-radius: 12px;
-    max-height: 85vh; /* Evita que se salga de la pantalla */
-    overflow-y: auto; /* Permite scroll interno */
+    max-height: 85vh; 
+    overflow-y: auto; 
     position: relative;
 }
-/* Estilo para el Checkbox */
+
 .check-legal {
     display: flex;
     align-items: center;
@@ -196,7 +222,7 @@ form input, form select, form textarea {
     width: 100%;
     padding: 15px;
     margin-top: 20px;
-    margin-bottom: 20px; /* Espacio extra al final */
+    margin-bottom: 20px;
     background: var(--accent);
     border: none;
     color: white;
