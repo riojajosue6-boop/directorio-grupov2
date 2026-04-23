@@ -4,37 +4,73 @@ const API_URL = 'https://directorio-grupov2-production.up.railway.app';
 const contenedor = document.getElementById('contenedor-grupos');
 const formGrupo = document.getElementById('formGrupo');
 const modal = document.getElementById('modalForm');
+const inputBusqueda = document.querySelector('.search-bar input'); // Referencia para el buscador
+
+let listaGrupos = []; // Memoria temporal para guardar los grupos de la DB
 
 // Abrir/Cerrar Modal
 document.getElementById('btnAbrirForm').onclick = () => modal.style.display = "block";
 document.querySelector('.close').onclick = () => modal.style.display = "none";
 
+// --- FUNCIÓN DE RENDERIZADO (Dibuja las cards) ---
+function renderizar(datos) {
+    if (!datos || datos.length === 0) {
+        contenedor.innerHTML = "<p style='color: #94a3b8;'>No se encontraron grupos.</p>";
+        return;
+    }
+
+    contenedor.innerHTML = datos.map(g => {
+        let clase = g.plataforma_id == 1 ? 'wa' : g.plataforma_id == 2 ? 'tg' : 'dc';
+        return `
+            <div class="card ${clase}">
+                <h4>${g.nombre}</h4>
+                <p><strong>${g.pais}</strong></p>
+                <p>${g.descripcion || ''}</p>
+                <a href="${g.link}" target="_blank" class="btn-unirse">Unirme</a>
+            </div>
+        `;
+    }).join('');
+}
+
 // Cargar grupos desde la DB
 async function cargarGrupos() {
     try {
         const res = await fetch(`${API_URL}/grupos`);
-        const grupos = await res.json();
-        
-        if (!grupos || grupos.length === 0) {
-            contenedor.innerHTML = "<p>No hay grupos publicados aún.</p>";
-            return;
-        }
-
-        contenedor.innerHTML = grupos.map(g => {
-            let clase = g.plataforma_id == 1 ? 'wa' : g.plataforma_id == 2 ? 'tg' : 'dc';
-            return `
-                <div class="card ${clase}">
-                    <h4>${g.nombre}</h4>
-                    <p><strong>${g.pais}</strong></p>
-                    <p>${g.descripcion || ''}</p>
-                    <a href="${g.link}" target="_blank" class="btn-unirse">Unirme</a>
-                </div>
-            `;
-        }).join('');
+        listaGrupos = await res.json();
+        renderizar(listaGrupos); // Al cargar, mostramos todos
     } catch (e) {
         contenedor.innerHTML = "<p>Error conectando al servidor.</p>";
     }
 }
+
+// --- PUNTO 2: FILTROS LATERALES ---
+document.querySelectorAll('.filtro-btn').forEach(boton => {
+    boton.onclick = (e) => {
+        // Estética: Quitar clase activa de todos y ponerla en el actual
+        document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+
+        const filtro = e.target.textContent.trim();
+
+        if (filtro === "Todos") {
+            renderizar(listaGrupos);
+        } else {
+            const idBuscado = filtro === "WhatsApp" ? 1 : filtro === "Telegram" ? 2 : 3;
+            const filtrados = listaGrupos.filter(g => g.plataforma_id == idBuscado);
+            renderizar(filtrados);
+        }
+    };
+});
+
+// --- PUNTO 3: BUSCADOR INTELIGENTE ---
+inputBusqueda.oninput = (e) => {
+    const termino = e.target.value.toLowerCase();
+    const filtrados = listaGrupos.filter(g => 
+        g.nombre.toLowerCase().includes(termino) || 
+        g.pais.toLowerCase().includes(termino)
+    );
+    renderizar(filtrados);
+};
 
 // Llenar selector de países
 function llenarPaises() {
@@ -50,7 +86,7 @@ function llenarPaises() {
     }
 }
 
-// Llenar selector de categorías (Volvimos a las 5 estables)
+// Llenar selector de categorías
 function llenarCategorias() {
     const cats = ["Amistad", "Ventas", "Educación", "Tecnología", "Otros"];
     const selectCat = document.getElementById('categoria');
@@ -69,7 +105,7 @@ function llenarCategorias() {
 formGrupo.onsubmit = async (e) => {
     e.preventDefault();
     const link = document.getElementById('link').value;
-    let plataforma_id = 1; // WhatsApp por defecto
+    let plataforma_id = 1; 
     if (link.includes('t.me')) plataforma_id = 2;
     if (link.includes('discord')) plataforma_id = 3;
 
