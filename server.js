@@ -23,18 +23,14 @@ const pool = new Pool({
 });
 
 // Ruta de prueba
-app.get('/', (req, res) => {
-    res.send('Servidor de MundoGrupos funcionando correctamente');
-});
-
-// RUTA: Obtener grupos
 app.get('/grupos', async (req, res) => {
     try {
-        const result = await pool.query('SELECT * FROM grupos WHERE estado = $1', ['aprobado']);
-        res.json(result.rows);
+        // Consultamos todos para probar, luego filtramos
+        const result = await pool.query('SELECT * FROM grupos');
+        res.json(result.rows || []);
     } catch (err) {
-        console.error("Error en GET /grupos:", err);
-        res.status(500).json({ error: "Error al obtener datos" });
+        console.error("Error detallado:", err.message);
+        res.status(500).json({ error: "Error en la base de datos: " + err.message });
     }
 });
 
