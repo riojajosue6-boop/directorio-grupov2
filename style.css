@@ -326,6 +326,21 @@ footer {
     object-fit: contain;
     display: block;
 }
+.footer-links {
+    margin: 15px 0;
+}
+
+.footer-links a {
+    color: #94a3b8;
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 0.9rem;
+    transition: color 0.3s;
+}
+
+.footer-links a:hover {
+    color: var(--primary);
+}
 
 /* Alineación de los iconos de Material Icons existentes */
 .platform-icon {
