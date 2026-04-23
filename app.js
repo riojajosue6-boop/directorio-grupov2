@@ -19,13 +19,29 @@ function renderizar(datos) {
         return;
     }
 
+    // Mapeo de IDs a nombres de categoría para mostrar en la card
+    const nombresCategorias = ["Amistad", "Ventas", "Educación", "Tecnología", "Otros"];
+
     contenedor.innerHTML = datos.map(g => {
-        let clase = g.plataforma_id == 1 ? 'wa' : g.plataforma_id == 2 ? 'tg' : 'dc';
+        let clase = '';
+        let icono = '';
+        
+        // Configuración según plataforma
+        if(g.plataforma_id == 1) { clase = 'wa'; icono = 'chat'; } 
+        else if(g.plataforma_id == 2) { clase = 'tg'; icono = 'send'; } 
+        else { clase = 'dc'; icono = 'groups'; }
+
+        const nombreCat = nombresCategorias[g.categoria_id - 1] || "Otros";
+
         return `
             <div class="card ${clase}">
+                <div class="card-header">
+                    <span class="categoria-tag">${nombreCat}</span>
+                    <span class="material-icons platform-icon">${icono}</span>
+                </div>
                 <h4>${g.nombre}</h4>
-                <p><strong>${g.pais}</strong></p>
-                <p>${g.descripcion || ''}</p>
+                <p class="pais-texto"><span class="material-icons" style="font-size: 14px;">place</span> ${g.pais}</p>
+                <p class="desc-texto">${g.descripcion || 'Sin descripción'}</p>
                 <a href="${g.link}" target="_blank" class="btn-unirse">Unirme</a>
             </div>
         `;
