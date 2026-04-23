@@ -12,7 +12,8 @@ let listaGrupos = []; // Memoria temporal para guardar los grupos de la DB
 document.getElementById('btnAbrirForm').onclick = () => modal.style.display = "block";
 document.querySelector('.close').onclick = () => modal.style.display = "none";
 
-// --- FUNCIÓN DE RENDERIZADO (Dibuja las cards) ---
+
+// --- FUNCIÓN DE RENDERIZADO MEJORADA (Con soporte para imagen de logo) ---
 function renderizar(datos) {
     if (!datos || datos.length === 0) {
         contenedor.innerHTML = "<p style='color: #94a3b8;'>No se encontraron grupos.</p>";
@@ -24,12 +25,22 @@ function renderizar(datos) {
 
     contenedor.innerHTML = datos.map(g => {
         let clase = '';
-        let icono = '';
+        let iconoHtml = ''; // Aquí guardaremos o el <img> o el <span> del icono
         
-        // Configuración según plataforma
-        if(g.plataforma_id == 1) { clase = 'wa'; icono = 'maps_ugc'; } 
-        else if(g.plataforma_id == 2) { clase = 'tg'; icono = 'send'; } 
-        else { clase = 'dc'; icono = 'groups'; }
+        // --- CONFIGURACIÓN SEGÚN PLATAFORMA ---
+        if(g.plataforma_id == 1) { 
+            clase = 'wa'; 
+            // REEMPLAZA 'whatsapp.png' CON EL NOMBRE EXACTO DE TU IMAGEN SUBIDA A GITHUB
+            iconoHtml = `<img src="imagen whastapp.png" alt="WhatsApp" class="platform-logo-img">`;
+        } 
+        else if(g.plataforma_id == 2) { 
+            clase = 'tg'; 
+            iconoHtml = `<span class="material-icons platform-icon">send</span>`; 
+        } 
+        else { 
+            clase = 'dc'; 
+            iconoHtml = `<span class="material-icons platform-icon">groups</span>`; 
+        }
 
         const nombreCat = nombresCategorias[g.categoria_id - 1] || "Otros";
 
@@ -37,7 +48,7 @@ function renderizar(datos) {
             <div class="card ${clase}">
                 <div class="card-header">
                     <span class="categoria-tag">${nombreCat}</span>
-                    <span class="material-icons platform-icon">${icono}</span>
+                    <div class="icon-wrapper">${iconoHtml}</div>
                 </div>
                 <h4>${g.nombre}</h4>
                 <p class="pais-texto"><span class="material-icons" style="font-size: 14px;">place</span> ${g.pais}</p>
@@ -47,7 +58,6 @@ function renderizar(datos) {
         `;
     }).join('');
 }
-
 // Cargar grupos desde la DB
 async function cargarGrupos() {
     try {
