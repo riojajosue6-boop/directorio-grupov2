@@ -290,3 +290,16 @@ footer {
     -webkit-box-orient: vertical;
     margin-top: 10px !important;
 }
+/* Ajuste específico para que los iconos se vean más limpios */
+.platform-icon {
+    font-family: 'Material Icons'; /* Asegura que cargue la fuente de iconos */
+    font-size: 22px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Si el icono 'whatsapp' no cargara por versión, usamos un respaldo redondo */
+.card.wa .platform-icon {
+    border-radius: 50%;
+}
