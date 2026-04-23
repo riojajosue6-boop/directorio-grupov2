@@ -245,3 +245,9 @@ footer {
     main { grid-template-columns: 1fr; }
     .hero h1 { font-size: 1.8rem; }
 }
+.search-bar input:focus {
+    outline: none;
+    background: #2d3748; /* Un poco más claro al escribir */
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4); /* Glow azul */
+    transition: all 0.3s ease;
+}
