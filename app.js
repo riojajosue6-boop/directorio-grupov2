@@ -27,7 +27,7 @@ function renderizar(datos) {
         let icono = '';
         
         // Configuración según plataforma
-        if(g.plataforma_id == 1) { clase = 'wa'; icono = 'on_device_training'; } 
+        if(g.plataforma_id == 1) { clase = 'wa'; icono = 'maps_ugc'; } 
         else if(g.plataforma_id == 2) { clase = 'tg'; icono = 'send'; } 
         else { clase = 'dc'; icono = 'groups'; }
 
