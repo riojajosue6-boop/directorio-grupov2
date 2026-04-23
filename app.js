@@ -1,4 +1,4 @@
-// USA TU URL REAL DE RAILWAY AQUÍ
+// REEMPLAZA ESTA URL CON TU DOMINIO DE RAILWAY (Sin barra al final)
 const API_URL = 'https://directorio-grupov2-production.up.railway.app';
 
 const contenedor = document.getElementById('contenedor-grupos');
@@ -9,13 +9,13 @@ const modal = document.getElementById('modalForm');
 document.getElementById('btnAbrirForm').onclick = () => modal.style.display = "block";
 document.querySelector('.close').onclick = () => modal.style.display = "none";
 
-// Función para cargar grupos de la DB
+// Cargar grupos desde la DB
 async function cargarGrupos() {
     try {
         const res = await fetch(`${API_URL}/grupos`);
         const grupos = await res.json();
         
-        if (grupos.length === 0) {
+        if (!grupos || grupos.length === 0) {
             contenedor.innerHTML = "<p>No hay grupos publicados aún.</p>";
             return;
         }
@@ -36,11 +36,10 @@ async function cargarGrupos() {
     }
 }
 
-// Función para llenar el selector de países
+// Llenar selector de países
 function llenarPaises() {
     const paises = ["Afganistán", "Albania", "Alemania", "Andorra", "Angola", "Antigua y Barbuda", "Arabia Saudita", "Argelia", "Argentina", "Armenia", "Australia", "Austria", "Azerbaiyán", "Bahamas", "Bangladés", "Barbados", "Baréin", "Bélgica", "Belice", "Benín", "Bielorrusia", "Birmania", "Bolivia", "Bosnia y Herzegovina", "Botsuana", "Brasil", "Brunéi", "Bulgaria", "Burkina Faso", "Burundi", "Bután", "Cabo Verde", "Camboya", "Camerún", "Canadá", "Catar", "Chad", "Chile", "China", "Chipre", "Ciudad del Vaticano", "Colombia", "Comoras", "Corea del Norte", "Corea del Sur", "Costa de Marfil", "Costa Rica", "Croacia", "Cuba", "Dinamarca", "Dominica", "Ecuador", "Egipto", "El Salvador", "Emiratos Árabes Unidos", "Eritrea", "Eslovaquia", "Eslovenia", "España", "Estados Unidos", "Estonia", "Etiopía", "Filipinas", "Finlandia", "Fiyi", "Francia", "Gabón", "Gambia", "Georgia", "Ghana", "Granada", "Grecia", "Guatemala", "Guyana", "Guinea", "Guinea ecuatorial", "Guinea-Bisáu", "Haití", "Honduras", "Hungría", "India", "Indonesia", "Irak", "Irán", "Irlanda", "Islandia", "Islas Marshall", "Islas Salomón", "Israel", "Italia", "Jamaica", "Japón", "Jordania", "Kazajistán", "Kenia", "Kirguistán", "Kiribati", "Kuwait", "Laos", "Lesoto", "Letonia", "Líbano", "Liberia", "Libia", "Liechtenstein", "Lituania", "Luxemburgo", "Macedonia del Norte", "Madagascar", "Malasia", "Malaui", "Maldivas", "Malí", "Malta", "Marruecos", "Mauricio", "Mauritania", "México", "Micronesia", "Moldavia", "Mónaco", "Mongolia", "Montenegro", "Mozambique", "Namibia", "Nauru", "Nepal", "Nicaragua", "Níger", "Nigeria", "Noruega", "Nueva Zelanda", "Omán", "Países Bajos", "Pakistán", "Palaos", "Panamá", "Papúa Nueva Guinea", "Paraguay", "Perú", "Polonia", "Portugal", "Reino Unido", "República Centroafricana", "República Checa", "República del Congo", "República Democrática del Congo", "República Dominicana", "Ruanda", "Rumanía", "Rusia", "Samoa", "San Cristóbal y Nieves", "San Marino", "San Vicente y las Granadinas", "Santa Lucía", "Santo Tomé y Príncipe", "Senegal", "Serbia", "Seychelles", "Sierra Leona", "Singapur", "Siria", "Somalia", "Sri Lanka", "Suazilandia", "Sudáfrica", "Sudán", "Sudán del Sur", "Suecia", "Suiza", "Surinam", "Tailandia", "Tanzania", "Tayikistán", "Timor Oriental", "Togo", "Tonga", "Trinidad y Tobago", "Túnez", "Turkmenistán", "Turquía", "Tuvalu", "Ucrania", "Uganda", "Uruguay", "Uzbekistán", "Vanuatu", "Venezuela", "Vietnam", "Yemen", "Yibuti", "Zambia", "Zimbabue"];
     const selectPais = document.getElementById('pais');
-    
     if(selectPais) {
         paises.forEach(pais => {
             let opt = document.createElement('option');
@@ -51,11 +50,10 @@ function llenarPaises() {
     }
 }
 
-// Función para llenar el selector de categorías
+// Llenar selector de categorías (Volvimos a las 5 estables)
 function llenarCategorias() {
-    const cats = ["Amistad", "Ventas", "Juegos", "Educacion", "Tecnologia"];
+    const cats = ["Amistad", "Ventas", "Educación", "Tecnología", "Otros"];
     const selectCat = document.getElementById('categoria');
-    
     if(selectCat) {
         selectCat.innerHTML = '<option value="" disabled selected>Selecciona una categoría</option>';
         cats.forEach((cat, i) => {
@@ -70,13 +68,10 @@ function llenarCategorias() {
 // Guardar grupo
 formGrupo.onsubmit = async (e) => {
     e.preventDefault();
-
     const link = document.getElementById('link').value;
-    let plataforma_id = 1; // Por defecto WhatsApp
-
-    // Detección automática de plataforma
+    let plataforma_id = 1; // WhatsApp por defecto
     if (link.includes('t.me')) plataforma_id = 2;
-    else if (link.includes('discord')) plataforma_id = 3;
+    if (link.includes('discord')) plataforma_id = 3;
 
     const datos = {
         nombre: document.getElementById('nombre').value,
@@ -90,25 +85,22 @@ formGrupo.onsubmit = async (e) => {
     try {
         const response = await fetch(`${API_URL}/grupos`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(datos)
         });
-
         if (response.ok) {
-            alert("¡Enviado con éxito! Aparecerá tras ser aprobado.");
+            alert("¡Enviado con éxito!");
             modal.style.display = "none";
             formGrupo.reset();
         } else {
-            // Esto nos dirá el error exacto en un alert
-            const errorText = await response.text();
-            alert("Error del servidor: " + errorText);
+            alert("Error al enviar. Revisa la consola.");
         }
     } catch (err) {
-        alert("Error de conexión: " + err.message);
+        alert("Error de conexión.");
     }
 };
 
-// Activar todo al cargar
+// Arranque
 window.onload = () => {
     llenarPaises();
     llenarCategorias();
