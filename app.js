@@ -27,7 +27,7 @@ function renderizar(datos) {
         let icono = '';
         
         // Configuración según plataforma
-        if(g.plataforma_id == 1) { clase = 'wa'; icono = 'chat'; } 
+        if(g.plataforma_id == 1) { clase = 'wa'; icono = 'whatsapp'; } 
         else if(g.plataforma_id == 2) { clase = 'tg'; icono = 'send'; } 
         else { clase = 'dc'; icono = 'groups'; }
 
