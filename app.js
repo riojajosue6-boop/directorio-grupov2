@@ -125,30 +125,38 @@ formGrupo.onsubmit = async (e) => {
     const nombre = document.getElementById('nombre').value;
     const descripcion = document.getElementById('descripcion').value;
     const link = document.getElementById('link').value;
+    
+    // Capturamos el valor y lo convertimos a número
     const plataforma_id = parseInt(document.getElementById('plataforma').value);
+
+    // DEBUG: Esto te dirá en la consola (F12) qué está leyendo el código
+    console.log("Plataforma seleccionada:", plataforma_id);
+    console.log("Enlace ingresado:", link);
 
     // --- A. FILTRO DE PALABRAS PROHIBIDAS ---
     const textoAnalizar = (nombre + " " + descripcion).toLowerCase();
-    const contieneProhibida = palabrasProhibidas.some(palabra => textoAnalizar.includes(palabra));
-
-    if (contieneProhibida) {
-        alert("⚠️ Tu grupo no puede ser publicado porque contiene términos que violan nuestras políticas de seguridad.");
+    if (palabrasProhibidas.some(palabra => textoAnalizar.includes(palabra))) {
+        alert("⚠️ Tu grupo contiene términos no permitidos.");
         return; 
     }
 
-    // --- B. VALIDACIÓN DE COHERENCIA (Enlace vs Plataforma) ---
-    if (plataforma_id === 1 && !link.includes('whatsapp.com')) {
-        alert("❌ El enlace no corresponde a WhatsApp.");
+    // --- B. VALIDACIÓN DE COHERENCIA (Corregida) ---
+    // Usamos == para evitar problemas de tipo de dato
+    if (plataforma_id == 1 && !link.includes('whatsapp.com')) {
+        alert("❌ Error: Seleccionaste WhatsApp pero el enlace no es de WhatsApp.");
         return;
     }
-    if (plataforma_id === 2 && !link.includes('t.me')) {
-        alert("❌ El enlace no corresponde a Telegram.");
+    if (plataforma_id == 2 && !link.includes('t.me')) {
+        alert("❌ Error: Seleccionaste Telegram pero el enlace no es de Telegram.");
         return;
     }
-    if (plataforma_id === 3 && !link.includes('discord')) {
-        alert("❌ El enlace no corresponde a Discord.");
+    if (plataforma_id == 3 && !link.includes('discord')) {
+        alert("❌ Error: Seleccionaste Discord pero el enlace no es de Discord.");
         return;
     }
+
+    // Si pasa todo esto, recién hace el fetch...
+    // ... resto de tu código de envío
 
     const datos = {
         nombre: nombre,
