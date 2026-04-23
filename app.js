@@ -65,7 +65,7 @@ async function cargarGrupos() {
     }
 }
 
-// --- 3. FILTROS Y BÚSQUEDA ---
+// --- 3. FILTROS LATERALES ---
 document.querySelectorAll('.filtro-btn').forEach(boton => {
     boton.onclick = (e) => {
         document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('active'));
@@ -82,16 +82,28 @@ document.querySelectorAll('.filtro-btn').forEach(boton => {
     };
 });
 
+// --- 4. BUSCADOR ULTRA-INTELIGENTE (Nombre, País y Categoría) ---
 inputBusqueda.oninput = (e) => {
     const termino = e.target.value.toLowerCase();
-    const filtrados = listaGrupos.filter(g => 
-        g.nombre.toLowerCase().includes(termino) || 
-        g.pais.toLowerCase().includes(termino)
-    );
+    
+    // Mapeo de nombres para que el buscador sepa qué ID corresponde a qué palabra
+    const nombresCategorias = ["amistad", "ventas", "educación", "tecnología", "otros"];
+
+    const filtrados = listaGrupos.filter(g => {
+        const nombreMatch = g.nombre.toLowerCase().includes(termino);
+        const paisMatch = g.pais.toLowerCase().includes(termino);
+        
+        // Buscamos si el término coincide con el nombre de la categoría del grupo
+        const nombreCat = (nombresCategorias[g.categoria_id - 1] || "otros").toLowerCase();
+        const categoriaMatch = nombreCat.includes(termino);
+
+        return nombreMatch || paisMatch || categoriaMatch;
+    });
+
     renderizar(filtrados);
 };
 
-// --- 4. FORMULARIO Y SEGURIDAD ---
+// --- 5. FORMULARIO Y SEGURIDAD ---
 function llenarPaises() {
     const paises = ["Afganistán", "Albania", "Alemania", "Andorra", "Angola", "Antigua y Barbuda", "Arabia Saudita", "Argelia", "Argentina", "Armenia", "Australia", "Austria", "Azerbaiyán", "Bahamas", "Bangladés", "Barbados", "Baréin", "Bélgica", "Belice", "Benín", "Bielorrusia", "Birmania", "Bolivia", "Bosnia y Herzegovina", "Botsuana", "Brasil", "Brunéi", "Bulgaria", "Burkina Faso", "Burundi", "Bután", "Cabo Verde", "Camboya", "Camerún", "Canadá", "Catar", "Chad", "Chile", "China", "Chipre", "Ciudad del Vaticano", "Colombia", "Comoras", "Corea del Norte", "Corea del Sur", "Costa de Marfil", "Costa Rica", "Croacia", "Cuba", "Dinamarca", "Dominica", "Ecuador", "Egipto", "El Salvador", "Emiratos Árabes Unidos", "Eritrea", "Eslovaquia", "Eslovenia", "España", "Estados Unidos", "Estonia", "Etiopía", "Filipinas", "Finlandia", "Fiyi", "Francia", "Gabón", "Gambia", "Georgia", "Ghana", "Granada", "Grecia", "Guatemala", "Guyana", "Guinea", "Guinea ecuatorial", "Guinea-Bisáu", "Haití", "Honduras", "Hungría", "India", "Indonesia", "Irak", "Irán", "Irlanda", "Islandia", "Islas Marshall", "Islas Salomón", "Israel", "Italia", "Jamaica", "Japón", "Jordania", "Kazajistán", "Kenia", "Kirguistán", "Kiribati", "Kuwait", "Laos", "Lesoto", "Letonia", "Líbano", "Liberia", "Libia", "Liechtenstein", "Lituania", "Luxemburgo", "Macedonia del Norte", "Madagascar", "Malasia", "Malaui", "Maldivas", "Malí", "Malta", "Marruecos", "Mauricio", "Mauritania", "México", "Micronesia", "Moldavia", "Mónaco", "Mongolia", "Montenegro", "Mozambique", "Namibia", "Nauru", "Nepal", "Nicaragua", "Níger", "Nigeria", "Noruega", "Nueva Zelanda", "Omán", "Países Bajos", "Pakistán", "Palaos", "Panamá", "Papúa Nueva Guinea", "Paraguay", "Perú", "Polonia", "Portugal", "Reino Unido", "República Centroafricana", "República Checa", "República del Congo", "República Democrática del Congo", "República Dominicana", "Ruanda", "Rumanía", "Rusia", "Samoa", "San Cristóbal y Nieves", "San Marino", "San Vicente y las Granadinas", "Santa Lucía", "Santo Tomé y Príncipe", "Senegal", "Serbia", "Seychelles", "Sierra Leona", "Singapur", "Siria", "Somalia", "Sri Lanka", "Suazilandia", "Sudáfrica", "Sudán", "Sudán del Sur", "Suecia", "Suiza", "Surinam", "Tailandia", "Tanzania", "Tayikistán", "Timor Oriental", "Togo", "Tonga", "Trinidad y Tobago", "Túnez", "Turkmenistán", "Turquía", "Tuvalu", "Ucrania", "Uganda", "Uruguay", "Uzbekistán", "Vanuatu", "Venezuela", "Vietnam", "Yemen", "Yibuti", "Zambia", "Zimbabue"];
     const selectPais = document.getElementById('pais');
@@ -125,13 +137,7 @@ formGrupo.onsubmit = async (e) => {
     const nombre = document.getElementById('nombre').value;
     const descripcion = document.getElementById('descripcion').value;
     const link = document.getElementById('link').value;
-    
-    // Capturamos el valor y lo convertimos a número
     const plataforma_id = parseInt(document.getElementById('plataforma').value);
-
-    // DEBUG: Esto te dirá en la consola (F12) qué está leyendo el código
-    console.log("Plataforma seleccionada:", plataforma_id);
-    console.log("Enlace ingresado:", link);
 
     // --- A. FILTRO DE PALABRAS PROHIBIDAS ---
     const textoAnalizar = (nombre + " " + descripcion).toLowerCase();
@@ -140,8 +146,7 @@ formGrupo.onsubmit = async (e) => {
         return; 
     }
 
-    // --- B. VALIDACIÓN DE COHERENCIA (Corregida) ---
-    // Usamos == para evitar problemas de tipo de dato
+    // --- B. VALIDACIÓN DE COHERENCIA ---
     if (plataforma_id == 1 && !link.includes('whatsapp.com')) {
         alert("❌ Error: Seleccionaste WhatsApp pero el enlace no es de WhatsApp.");
         return;
@@ -154,9 +159,6 @@ formGrupo.onsubmit = async (e) => {
         alert("❌ Error: Seleccionaste Discord pero el enlace no es de Discord.");
         return;
     }
-
-    // Si pasa todo esto, recién hace el fetch...
-    // ... resto de tu código de envío
 
     const datos = {
         nombre: nombre,
@@ -186,7 +188,7 @@ formGrupo.onsubmit = async (e) => {
     }
 };
 
-// --- 5. REPORTE ---
+// --- 6. REPORTE ---
 function reportarGrupo(id) {
     if (confirm("¿Deseas reportar este enlace por contenido inapropiado o caído?")) {
         const tarjeta = document.getElementById(`grupo-${id}`);
