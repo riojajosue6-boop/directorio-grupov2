@@ -128,22 +128,34 @@ function llenarCategorias() {
 }
 
 // Guardar grupo
+// 1. Definir lista negra al inicio del archivo app.js
+const palabrasProhibidas = ['porno', 'sexo', 'xxx', 'dating', 'estafa', 'binance', 'invertir', 'ganar dinero', 'drogas', 'narcotico', 'pildoras'];
+
+// 2. Actualizar el evento de envío
 formGrupo.onsubmit = async (e) => {
     e.preventDefault();
-    const link = document.getElementById('link').value;
-    let plataforma_id = 1; 
-    if (link.includes('t.me')) plataforma_id = 2;
-    if (link.includes('discord')) plataforma_id = 3;
 
+    const nombre = document.getElementById('nombre').value;
+    const descripcion = document.getElementById('descripcion').value;
+
+    // VALIDACIÓN DE FILTRO
+    const textoAnalizar = (nombre + " " + descripcion).toLowerCase();
+    const contieneProhibida = palabrasProhibidas.some(palabra => textoAnalizar.includes(palabra));
+
+    if (contieneProhibida) {
+        alert("⚠️ Tu grupo no puede ser publicado porque contiene términos que violan nuestras políticas de seguridad.");
+        return; // Aquí se detiene y no envía nada al servidor
+    }
+
+    // Si pasa el filtro, sigue el código de envío que ya tenías...
     const datos = {
-        nombre: document.getElementById('nombre').value,
-        plataforma_id: plataforma_id,
-        link: link,
-        categoria_id: parseInt(document.getElementById('categoria').value) || 1,
+        nombre: nombre,
+        descripcion: descripcion,
+        link: document.getElementById('link').value,
         pais: document.getElementById('pais').value,
-        descripcion: document.getElementById('descripcion').value || ""
+        plataforma_id: parseInt(document.getElementById('plataforma').value),
+        categoria_id: parseInt(document.getElementById('categoria').value)
     };
-
     try {
         const response = await fetch(`${API_URL}/grupos`, {
             method: 'POST',
