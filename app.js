@@ -25,18 +25,14 @@ function renderizar(datos) {
     const nombresCategorias = ["Amistad", "Ventas", "Educación", "Tecnología", "Otros"];
 
     contenedor.innerHTML = datos.map(g => {
-        // Determinamos la clase CSS (wa, tg, dc) según la plataforma
         let clase = g.plataforma_id == 1 ? 'wa' : g.plataforma_id == 2 ? 'tg' : 'dc';
         
-        // Elegimos si mostrar la imagen de WhatsApp o el icono de Google (Telegram/Discord)
         let iconoHtml = g.plataforma_id == 1 
             ? `<img src="imagen whastapp.png" alt="WA" class="platform-logo-img">` 
             : `<span class="material-icons platform-icon">${g.plataforma_id == 2 ? 'send' : 'groups'}</span>`;
 
-        // Traducimos el ID de categoría a texto
         const nombreCat = nombresCategorias[g.categoria_id - 1] || "Otros";
 
-        // Devolvemos el HTML de la tarjeta con el botón de reporte (flag)
         return `
             <div class="card ${clase}" id="grupo-${g.id}">
                 <div class="card-header">
@@ -95,7 +91,7 @@ inputBusqueda.oninput = (e) => {
     renderizar(filtrados);
 };
 
-// --- 4. FORMULARIO Y SEGURIDAD (Publicación Directa con Filtro) ---
+// --- 4. FORMULARIO Y SEGURIDAD ---
 function llenarPaises() {
     const paises = ["Afganistán", "Albania", "Alemania", "Andorra", "Angola", "Antigua y Barbuda", "Arabia Saudita", "Argelia", "Argentina", "Armenia", "Australia", "Austria", "Azerbaiyán", "Bahamas", "Bangladés", "Barbados", "Baréin", "Bélgica", "Belice", "Benín", "Bielorrusia", "Birmania", "Bolivia", "Bosnia y Herzegovina", "Botsuana", "Brasil", "Brunéi", "Bulgaria", "Burkina Faso", "Burundi", "Bután", "Cabo Verde", "Camboya", "Camerún", "Canadá", "Catar", "Chad", "Chile", "China", "Chipre", "Ciudad del Vaticano", "Colombia", "Comoras", "Corea del Norte", "Corea del Sur", "Costa de Marfil", "Costa Rica", "Croacia", "Cuba", "Dinamarca", "Dominica", "Ecuador", "Egipto", "El Salvador", "Emiratos Árabes Unidos", "Eritrea", "Eslovaquia", "Eslovenia", "España", "Estados Unidos", "Estonia", "Etiopía", "Filipinas", "Finlandia", "Fiyi", "Francia", "Gabón", "Gambia", "Georgia", "Ghana", "Granada", "Grecia", "Guatemala", "Guyana", "Guinea", "Guinea ecuatorial", "Guinea-Bisáu", "Haití", "Honduras", "Hungría", "India", "Indonesia", "Irak", "Irán", "Irlanda", "Islandia", "Islas Marshall", "Islas Salomón", "Israel", "Italia", "Jamaica", "Japón", "Jordania", "Kazajistán", "Kenia", "Kirguistán", "Kiribati", "Kuwait", "Laos", "Lesoto", "Letonia", "Líbano", "Liberia", "Libia", "Liechtenstein", "Lituania", "Luxemburgo", "Macedonia del Norte", "Madagascar", "Malasia", "Malaui", "Maldivas", "Malí", "Malta", "Marruecos", "Mauricio", "Mauritania", "México", "Micronesia", "Moldavia", "Mónaco", "Mongolia", "Montenegro", "Mozambique", "Namibia", "Nauru", "Nepal", "Nicaragua", "Níger", "Nigeria", "Noruega", "Nueva Zelanda", "Omán", "Países Bajos", "Pakistán", "Palaos", "Panamá", "Papúa Nueva Guinea", "Paraguay", "Perú", "Polonia", "Portugal", "Reino Unido", "República Centroafricana", "República Checa", "República del Congo", "República Democrática del Congo", "República Dominicana", "Ruanda", "Rumanía", "Rusia", "Samoa", "San Cristóbal y Nieves", "San Marino", "San Vicente y las Granadinas", "Santa Lucía", "Santo Tomé y Príncipe", "Senegal", "Serbia", "Seychelles", "Sierra Leona", "Singapur", "Siria", "Somalia", "Sri Lanka", "Suazilandia", "Sudáfrica", "Sudán", "Sudán del Sur", "Suecia", "Suiza", "Surinam", "Tailandia", "Tanzania", "Tayikistán", "Timor Oriental", "Togo", "Tonga", "Trinidad y Tobago", "Túnez", "Turkmenistán", "Turquía", "Tuvalu", "Ucrania", "Uganda", "Uruguay", "Uzbekistán", "Vanuatu", "Venezuela", "Vietnam", "Yemen", "Yibuti", "Zambia", "Zimbabue"];
     const selectPais = document.getElementById('pais');
@@ -128,8 +124,10 @@ formGrupo.onsubmit = async (e) => {
 
     const nombre = document.getElementById('nombre').value;
     const descripcion = document.getElementById('descripcion').value;
+    const link = document.getElementById('link').value;
+    const plataforma_id = parseInt(document.getElementById('plataforma').value);
 
-    // --- FILTRO DE SEGURIDAD ACTIVO ---
+    // --- A. FILTRO DE PALABRAS PROHIBIDAS ---
     const textoAnalizar = (nombre + " " + descripcion).toLowerCase();
     const contieneProhibida = palabrasProhibidas.some(palabra => textoAnalizar.includes(palabra));
 
@@ -138,10 +136,19 @@ formGrupo.onsubmit = async (e) => {
         return; 
     }
 
-    const link = document.getElementById('link').value;
-    let plataforma_id = 1; 
-    if (link.includes('t.me')) plataforma_id = 2;
-    if (link.includes('discord')) plataforma_id = 3;
+    // --- B. VALIDACIÓN DE COHERENCIA (Enlace vs Plataforma) ---
+    if (plataforma_id === 1 && !link.includes('whatsapp.com')) {
+        alert("❌ El enlace no corresponde a WhatsApp.");
+        return;
+    }
+    if (plataforma_id === 2 && !link.includes('t.me')) {
+        alert("❌ El enlace no corresponde a Telegram.");
+        return;
+    }
+    if (plataforma_id === 3 && !link.includes('discord')) {
+        alert("❌ El enlace no corresponde a Discord.");
+        return;
+    }
 
     const datos = {
         nombre: nombre,
@@ -162,7 +169,7 @@ formGrupo.onsubmit = async (e) => {
             alert("¡Enviado con éxito!");
             modal.style.display = "none";
             formGrupo.reset();
-            cargarGrupos(); // Refresca la lista automáticamente
+            cargarGrupos(); 
         } else {
             alert("Error al enviar.");
         }
