@@ -5,16 +5,16 @@ require('dotenv').config();
 
 const app = express();
 
-// Configuración de CORS única y limpia
+// Configuración de CORS para permitir conexiones desde GitHub Pages
 app.use(cors({
-    origin: '*', 
+    origin: '*',
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type']
 }));
 
 app.use(express.json());
 
-// Configuración de la conexión a Postgres (CORREGIDA)
+// Conexión a la base de datos usando la variable de Railway
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: {
@@ -22,19 +22,23 @@ const pool = new Pool({
     }
 });
 
-// Ruta de prueba
+// Ruta de prueba inicial
+app.get('/', (req, res) => {
+    res.send('Servidor de MundoGrupos funcionando correctamente');
+});
+
+// Obtener grupos
 app.get('/grupos', async (req, res) => {
     try {
-        // Consultamos todos para probar, luego filtramos
         const result = await pool.query('SELECT * FROM grupos');
         res.json(result.rows || []);
     } catch (err) {
-        console.error("Error detallado:", err.message);
-        res.status(500).json({ error: "Error en la base de datos: " + err.message });
+        console.error("Error en base de datos:", err.message);
+        res.status(500).json({ error: err.message });
     }
 });
 
-// RUTA: Guardar grupo
+// Guardar nuevo grupo
 app.post('/grupos', async (req, res) => {
     const { nombre, descripcion, link, pais, plataforma_id, categoria_id } = req.body;
     try {
@@ -44,8 +48,8 @@ app.post('/grupos', async (req, res) => {
         );
         res.json({ success: true });
     } catch (err) {
-        console.error("Error en POST /grupos:", err);
-        res.status(500).json({ error: "Error al guardar el grupo" });
+        console.error("Error al guardar:", err.message);
+        res.status(500).json({ error: err.message });
     }
 });
 
