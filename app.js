@@ -57,6 +57,17 @@ function renderizar(datos) {
             </div>
         `;
     }).join('');
+    // Dentro del template string de tu card:
+`
+<div class="card" id="grupo-${g.id}">
+    <div style="display: flex; gap: 8px; margin-top: 12px;">
+        <a href="${g.link}" target="_blank" class="btn-unirse" style="flex: 1;">Unirme</a>
+        <button onclick="reportarGrupo(${g.id})" class="btn-reportar" title="Reportar">
+            <span class="material-icons">flag</span>
+        </button>
+    </div>
+</div>
+`
 }
 // Cargar grupos desde la DB
 async function cargarGrupos() {
