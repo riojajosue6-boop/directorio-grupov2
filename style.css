@@ -251,3 +251,42 @@ footer {
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4); /* Glow azul */
     transition: all 0.3s ease;
 }
+/* Cabecera de la Card */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.categoria-tag {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #cbd5e1;
+    text-transform: uppercase;
+}
+
+.platform-icon {
+    font-size: 20px !important;
+    opacity: 0.8;
+}
+
+.pais-texto {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--primary) !important;
+    font-weight: bold;
+}
+
+.desc-texto {
+    height: 45px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    margin-top: 10px !important;
+}
