@@ -44,7 +44,7 @@ app.post('/grupos', async (req, res) => {
     try {
         await pool.query(
             'INSERT INTO grupos (nombre, descripcion, link, pais, plataforma_id, categoria_id, estado) VALUES ($1, $2, $3, $4, $5, $6, $7)',
-            [nombre, descripcion, link, pais, plataforma_id, categoria_id, 'pendiente']
+            [nombre, descripcion, link, pais, plataforma_id, categoria_id, 'aprobado']
         );
         res.json({ success: true });
     } catch (err) {
