@@ -18,7 +18,7 @@ document.querySelector('.close').onclick = () => modal.style.display = "none";
 // --- 1. FUNCIÓN DE RENDERIZADO (Crea los cuadros visuales) ---
 function renderizar(datos) {
     if (!datos || datos.length === 0) {
-        contenedor.innerHTML = "<p style='color: #94a3b8;'>No se encontraron grupos.</p>";
+        contenedor.innerHTML = "<p style='color: #94a3b8;'>No se encontraron grupos pero puedes ser el primero en cargar tus prupos preferidos ve a la opcion +Subir Grupo.</p>";
         return;
     }
 
