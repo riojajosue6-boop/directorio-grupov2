@@ -8,8 +8,9 @@ const inputBusqueda = document.querySelector('.search-bar input');
 
 let listaGrupos = []; 
 
-// Función para limpiar tildes y normalizar (Para el buscador)
+// Función necesaria para el buscador inteligente (tildes)
 function limpiarTexto(texto) {
+    if (!texto) return "";
     return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 }
 
@@ -20,7 +21,7 @@ const palabrasProhibidas = ['porno', 'sexo', 'xxx', 'dating', 'estafa', 'binance
 document.getElementById('btnAbrirForm').onclick = () => modal.style.display = "block";
 document.querySelector('.close').onclick = () => modal.style.display = "none";
 
-// --- 1. FUNCIÓN DE RENDERIZADO (Crea los cuadros visuales) ---
+// --- 1. FUNCIÓN DE RENDERIZADO ---
 function renderizar(datos) {
     if (!datos || datos.length === 0) {
         contenedor.innerHTML = "<p style='color: #94a3b8;'>No se encontraron grupos, pero puedes ser el primero en promocionar tu grupo.</p>";
@@ -32,7 +33,7 @@ function renderizar(datos) {
     contenedor.innerHTML = datos.map(g => {
         let clase = g.plataforma_id == 1 ? 'wa' : g.plataforma_id == 2 ? 'tg' : 'dc';
         
-        // Detección de Comunidad
+        // Lógica de etiqueta automática (Comunidad vs Grupo)
         const esComunidad = g.link && g.link.includes('/community/');
         const badgeClass = esComunidad ? 'badge-comunidad' : 'badge-grupo';
         const tipoTexto = esComunidad ? 'Comunidad' : 'Grupo';
@@ -93,10 +94,9 @@ document.querySelectorAll('.filtro-btn').forEach(boton => {
     };
 });
 
-// --- 4. BUSCADOR ULTRA-INTELIGENTE (Modificado para ignorar tildes) ---
+// --- 4. BUSCADOR ULTRA-INTELIGENTE ---
 inputBusqueda.oninput = (e) => {
     const termino = limpiarTexto(e.target.value);
-    
     const nombresCategorias = ["amistad", "ventas", "educación", "tecnología", "otros"];
 
     const filtrados = listaGrupos.filter(g => {
@@ -111,4 +111,16 @@ inputBusqueda.oninput = (e) => {
     renderizar(filtrados);
 };
 
-// ... [Las funciones llenarPaises, llenarCategorias, formGrupo.onsubmit, reportarGrupo y window.onload quedan exactamente igual a tu original]
+// --- 5. FORMULARIO Y SEGURIDAD ---
+function llenarPaises() { /* (Tus funciones originales aquí) */ }
+function llenarCategorias() { /* (Tus funciones originales aquí) */ }
+formGrupo.onsubmit = async (e) => { /* (Tus funciones originales aquí) */ };
+
+// --- 6. REPORTE ---
+function reportarGrupo(id) { /* (Tus funciones originales aquí) */ }
+
+window.onload = () => {
+    llenarPaises();
+    llenarCategorias();
+    cargarGrupos();
+};
