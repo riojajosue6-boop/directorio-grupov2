@@ -1,4 +1,4 @@
-// REEMPLAZA ESTA URL CON TU DOMINIO DE RAILWAY
+// REEMPLAZA ESTA URL CON TU DOMINIO DE RAILWAY (Sin barra al final)
 const API_URL = 'https://directorio-grupov2-production.up.railway.app';
 
 const contenedor = document.getElementById('contenedor-grupos');
@@ -8,20 +8,22 @@ const inputBusqueda = document.querySelector('.search-bar input');
 
 let listaGrupos = []; 
 
-// Función para limpiar tildes y normalizar textos
+// Función para limpiar tildes y normalizar (Para el buscador)
 function limpiarTexto(texto) {
     return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 }
 
+// --- SEGURIDAD: Lista de palabras prohibidas ---
 const palabrasProhibidas = ['porno', 'sexo', 'xxx', 'dating', 'estafa', 'binance', 'invertir', 'ganar dinero', 'drogas', 'narcotico', 'pildoras'];
 
+// Abrir/Cerrar Modal
 document.getElementById('btnAbrirForm').onclick = () => modal.style.display = "block";
 document.querySelector('.close').onclick = () => modal.style.display = "none";
 
-// --- 1. FUNCIÓN DE RENDERIZADO MEJORADA ---
+// --- 1. FUNCIÓN DE RENDERIZADO (Crea los cuadros visuales) ---
 function renderizar(datos) {
     if (!datos || datos.length === 0) {
-        contenedor.innerHTML = "<p style='color: #94a3b8;'>No se encontraron grupos, intenta con otra búsqueda.</p>";
+        contenedor.innerHTML = "<p style='color: #94a3b8;'>No se encontraron grupos, pero puedes ser el primero en promocionar tu grupo,en la parte superior derecha dale click en la opción +Subir Grupo.</p>";
         return;
     }
 
@@ -30,11 +32,11 @@ function renderizar(datos) {
     contenedor.innerHTML = datos.map(g => {
         let clase = g.plataforma_id == 1 ? 'wa' : g.plataforma_id == 2 ? 'tg' : 'dc';
         
-        // Detección automática de Comunidad
+        // Lógica de etiqueta automática
         const esComunidad = g.link.includes('/community/');
         const badgeClass = esComunidad ? 'badge-comunidad' : 'badge-grupo';
         const tipoTexto = esComunidad ? 'Comunidad' : 'Grupo';
-
+        
         let iconoHtml = g.plataforma_id == 1 
             ? `<img src="imagen whastapp.png" alt="WA" class="platform-logo-img">` 
             : `<span class="material-icons platform-icon">${g.plataforma_id == 2 ? 'send' : 'groups'}</span>`;
@@ -91,17 +93,22 @@ document.querySelectorAll('.filtro-btn').forEach(boton => {
     };
 });
 
-// --- 4. BUSCADOR INTELIGENTE (Sin Tildes) ---
+// --- 4. BUSCADOR ULTRA-INTELIGENTE (Modificado para ignorar tildes) ---
 inputBusqueda.oninput = (e) => {
     const termino = limpiarTexto(e.target.value);
     
+    const nombresCategorias = ["amistad", "ventas", "educación", "tecnología", "otros"];
+
     const filtrados = listaGrupos.filter(g => {
-        return limpiarTexto(g.nombre).includes(termino) || 
-               limpiarTexto(g.pais).includes(termino);
+        const nombreMatch = limpiarTexto(g.nombre).includes(termino);
+        const paisMatch = limpiarTexto(g.pais).includes(termino);
+        const nombreCat = limpiarTexto(nombresCategorias[g.categoria_id - 1] || "otros");
+        const categoriaMatch = nombreCat.includes(termino);
+
+        return nombreMatch || paisMatch || categoriaMatch;
     });
 
     renderizar(filtrados);
 };
 
-// ... (El resto de tus funciones: llenarPaises, llenarCategorias, formGrupo.onsubmit y reportarGrupo se mantienen igual)
-// Asegúrate de copiar las funciones restantes de tu código original después de esta línea para no perder nada.
+// ... [Las funciones llenarPaises, llenarCategorias, formGrupo.onsubmit, reportarGrupo y window.onload quedan exactamente igual a tu original]
