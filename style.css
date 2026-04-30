@@ -347,3 +347,18 @@ footer {
     font-size: 22px !important; /* Mismo tamaño que la imagen */
     color: #cbd5e1; /* Color gris suave por defecto */
 }
+.badge {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.70rem;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 5px;
+}
+
+.badge-grupo { 
+    background: rgba(33, 150, 243, 0.2); color: #64b5f6; border: 1px solid #64b5f6; 
+    }
+.badge-comunidad {
+    background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid #34d399; 
+    }
