@@ -23,7 +23,7 @@ document.querySelector('.close').onclick = () => modal.style.display = "none";
 // --- 1. FUNCIÓN DE RENDERIZADO (Crea los cuadros visuales) ---
 function renderizar(datos) {
     if (!datos || datos.length === 0) {
-        contenedor.innerHTML = "<p style='color: #94a3b8;'>No se encontraron grupos, pero puedes ser el primero en promocionar tu grupo,en la parte superior derecha dale click en la opción +Subir Grupo.</p>";
+        contenedor.innerHTML = "<p style='color: #94a3b8;'>No se encontraron grupos, pero puedes ser el primero en promocionar tu grupo.</p>";
         return;
     }
 
@@ -32,11 +32,11 @@ function renderizar(datos) {
     contenedor.innerHTML = datos.map(g => {
         let clase = g.plataforma_id == 1 ? 'wa' : g.plataforma_id == 2 ? 'tg' : 'dc';
         
-        // Lógica de etiqueta automática
-        const esComunidad = g.link.includes('/community/');
+        // Detección de Comunidad
+        const esComunidad = g.link && g.link.includes('/community/');
         const badgeClass = esComunidad ? 'badge-comunidad' : 'badge-grupo';
         const tipoTexto = esComunidad ? 'Comunidad' : 'Grupo';
-        
+
         let iconoHtml = g.plataforma_id == 1 
             ? `<img src="imagen whastapp.png" alt="WA" class="platform-logo-img">` 
             : `<span class="material-icons platform-icon">${g.plataforma_id == 2 ? 'send' : 'groups'}</span>`;
