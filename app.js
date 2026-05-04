@@ -1,35 +1,14 @@
-// REEMPLAZA ESTA URL CON TU DOMINIO DE RAILWAY (Sin barra al final)
+// --- COPIA ESTE BLOQUE COMPLETO A TU ARCHIVO app.js ---
 
+// REEMPLAZA ESTA URL CON TU DOMINIO DE RAILWAY
 const API_URL = 'https://directorio-grupov2-production.up.railway.app';
 
-
-
 const contenedor = document.getElementById('contenedor-grupos');
-
 const formGrupo = document.getElementById('formGrupo');
-
 const modal = document.getElementById('modalForm');
-
 const inputBusqueda = document.querySelector('.search-bar input');
 
-
-
 let listaGrupos = []; 
-
-
-
-// --- SEGURIDAD: Lista de palabras prohibidas ---
-
-const palabrasProhibidas = ['porno', 'sexo', 'xxx', 'dating', 'estafa', 'binance', 'invertir', 'ganar dinero', 'drogas', 'narcotico', 'pildoras'];
-
-
-
-// Abrir/Cerrar Modal
-
-document.getElementById('btnAbrirForm').onclick = () => modal.style.display = "block";
-
-document.querySelector('.close').onclick = () => modal.style.display = "none";
-
 
 // Función para limpiar tildes y normalizar
 function limpiarTexto(texto) {
@@ -37,82 +16,58 @@ function limpiarTexto(texto) {
     return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 }
 
+const palabrasProhibidas = ['porno', 'sexo', 'xxx', 'dating', 'estafa', 'binance', 'invertir', 'ganar dinero', 'drogas', 'narcotico', 'pildoras'];
 
-// --- 1. FUNCIÓN DE RENDERIZADO (Crea los cuadros visuales) ---
+document.getElementById('btnAbrirForm').onclick = () => modal.style.display = "block";
+document.querySelector('.close').onclick = () => modal.style.display = "none";
 
+// --- 1. FUNCIÓN DE RENDERIZADO CON ETIQUETAS ---
 function renderizar(datos) {
-
     if (!datos || datos.length === 0) {
-
-        contenedor.innerHTML = "<p style='color: #94a3b8;'>No se encontraron grupos, pero puedes ser el primero en promocionar tu grupo,en la parte superior derecha dale click en la opción +Subir Grupo.</p>";
-
+        contenedor.innerHTML = "<p style='color: #94a3b8;'>No se encontraron grupos, intenta con otra búsqueda.</p>";
         return;
-
     }
-
-
 
     const nombresCategorias = ["Amistad", "Ventas", "Educación", "Tecnología", "Otros"];
 
-
-
     contenedor.innerHTML = datos.map(g => {
-
         let clase = g.plataforma_id == 1 ? 'wa' : g.plataforma_id == 2 ? 'tg' : 'dc';
-
         
+        // --- AQUÍ ESTÁ LA LÓGICA DE DETECCIÓN QUE NECESITAS ---
+        const esComunidad = g.link && g.link.includes('/community/');
+        const badgeClass = esComunidad ? 'badge-comunidad' : 'badge-grupo';
+        const tipoTexto = esComunidad ? 'Comunidad' : 'Grupo';
 
         let iconoHtml = g.plataforma_id == 1 
-
             ? `<img src="imagen whastapp.png" alt="WA" class="platform-logo-img">` 
-
             : `<span class="material-icons platform-icon">${g.plataforma_id == 2 ? 'send' : 'groups'}</span>`;
-
-
 
         const nombreCat = nombresCategorias[g.categoria_id - 1] || "Otros";
 
-
-
         return `
-
             <div class="card ${clase}" id="grupo-${g.id}">
-
                 <div class="card-header">
-
                     <span class="categoria-tag">${nombreCat}</span>
-
                     <div class="icon-wrapper">${iconoHtml}</div>
-
                 </div>
-
+                <span class="badge ${badgeClass}">${tipoTexto}</span>
                 <h4>${g.nombre}</h4>
-
                 <p class="pais-texto"><span class="material-icons" style="font-size: 14px;">place</span> ${g.pais}</p>
-
                 <p class="desc-texto">${g.descripcion || 'Sin descripción'}</p>
-
                 
-
                 <div style="display: flex; gap: 8px; margin-top: 12px;">
-
                     <a href="${g.link}" target="_blank" class="btn-unirse" style="flex: 1;">Unirme</a>
-
                     <button onclick="reportarGrupo(${g.id})" class="btn-reportar" title="Reportar">
-
                         <span class="material-icons" style="font-size: 18px;">flag</span>
-
                     </button>
-
                 </div>
-
             </div>
-
         `;
-
     }).join(''); 
-
 }
+
+// --- RESTO DE TUS FUNCIONES ORIGINALES (Cargar, Filtros, Buscador, etc) ---
+// [Mantén aquí el resto de tu lógica: cargarGrupos, filtros laterales, buscador con limpiarTexto, etc]
 
 
 
