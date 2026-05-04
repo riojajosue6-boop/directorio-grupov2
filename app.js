@@ -31,6 +31,12 @@ document.getElementById('btnAbrirForm').onclick = () => modal.style.display = "b
 document.querySelector('.close').onclick = () => modal.style.display = "none";
 
 
+// Función para limpiar tildes y normalizar
+function limpiarTexto(texto) {
+    if (!texto) return "";
+    return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+}
+
 
 // --- 1. FUNCIÓN DE RENDERIZADO (Crea los cuadros visuales) ---
 
@@ -166,44 +172,28 @@ document.querySelectorAll('.filtro-btn').forEach(boton => {
 
 
 
-// --- 4. BUSCADOR ULTRA-INTELIGENTE (Nombre, País y Categoría) ---
-
+// --- 4. BUSCADOR ULTRA-INTELIGENTE ---
 inputBusqueda.oninput = (e) => {
+    // Si la lista está vacía, no hacemos nada
+    if (listaGrupos.length === 0) return;
 
-    const termino = e.target.value.toLowerCase();
-
-    
-
-    // Mapeo de nombres para que el buscador sepa qué ID corresponde a qué palabra
-
+    const termino = limpiarTexto(e.target.value);
     const nombresCategorias = ["amistad", "ventas", "educación", "tecnología", "otros"];
 
-
-
     const filtrados = listaGrupos.filter(g => {
-
-        const nombreMatch = g.nombre.toLowerCase().includes(termino);
-
-        const paisMatch = g.pais.toLowerCase().includes(termino);
-
+        // Limpiamos los campos antes de comparar
+        const nombreLimpio = limpiarTexto(g.nombre || "");
+        const paisLimpio = limpiarTexto(g.pais || "");
         
+        // Categoría también normalizada
+        const catLimpia = limpiarTexto(nombresCategorias[g.categoria_id - 1] || "otros");
 
-        // Buscamos si el término coincide con el nombre de la categoría del grupo
-
-        const nombreCat = (nombresCategorias[g.categoria_id - 1] || "otros").toLowerCase();
-
-        const categoriaMatch = nombreCat.includes(termino);
-
-
-
-        return nombreMatch || paisMatch || categoriaMatch;
-
+        return nombreLimpio.includes(termino) || 
+               paisLimpio.includes(termino) || 
+               catLimpia.includes(termino);
     });
 
-
-
     renderizar(filtrados);
-
 };
 
 
