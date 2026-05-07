@@ -52,8 +52,7 @@ function renderizar(datos) {
                 </div>
                 <span class="badge ${badgeClass}">${tipoTexto}</span>
                 <h4>${g.nombre}</h4>
-                <p class="pais-texto"><span class="material-icons" style="font-size: 14px;">place</span> ${g.pais}</p>
-                // Busca esta parte dentro de tu función renderizar en app.js
+                <p class="pais-texto"><span class="material-icons" style="font-size: 14px;">place</span> ${g.pais}</p>             
                 <p class="desc-texto" title="${g.descripcion || 'Sin descripción'}">
                     ${g.descripcion || 'Sin descripción'}
                 </p>
