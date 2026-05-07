@@ -205,18 +205,21 @@ formGrupo.onsubmit = async (e) => {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(datos)
         });
+
+        const resultado = await response.json(); // Leemos la respuesta del servidor
+
         if (response.ok) {
             alert("¡Enviado con éxito!");
             modal.style.display = "none";
             formGrupo.reset();
             cargarGrupos(); 
         } else {
-            alert("Error al enviar.");
+            // Si el servidor mandó un error (como el de duplicado), lo mostramos
+            alert("❌ " + (resultado.error || "Error al enviar el grupo."));
         }
     } catch (err) {
-        alert("Error de conexión.");
+        alert("Error de conexión con el servidor.");
     }
-};
 
 // --- 7. REPORTE ---
 function reportarGrupo(id) {
