@@ -42,17 +42,20 @@ app.get('/grupos', async (req, res) => {
 app.post('/grupos', async (req, res) => {
     const { nombre, descripcion, link, pais, plataforma_id, categoria_id } = req.body;
     try {
-        await pool.query(
-            'INSERT INTO grupos (nombre, descripcion, link, pais, plataforma_id, categoria_id, estado) VALUES ($1, $2, $3, $4, $5, $6, $7)',
-            [nombre, descripcion, link, pais, plataforma_id, categoria_id, 'aprobado']
+        const nuevoGrupo = await pool.query(
+            "INSERT INTO grupos (nombre, descripcion, link, pais, plataforma_id, categoria_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+            [nombre, descripcion, link, pais, plataforma_id, categoria_id]
         );
-        res.json({ success: true });
+        res.json(nuevoGrupo.rows[0]);
     } catch (err) {
-        console.error("Error al guardar:", err.message);
-        res.status(500).json({ error: err.message });
+        // --- AQUÍ ESTÁ LA MAGIA ---
+        if (err.code === '23505') {
+            return res.status(400).json({ error: "Este enlace de grupo ya está registrado en nuestra base de datos." });
+        }
+        console.error(err.message);
+        res.status(500).send("Error del servidor");
     }
 });
-
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Servidor activo en puerto ${PORT}`);
