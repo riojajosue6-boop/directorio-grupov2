@@ -185,7 +185,7 @@ function llenarPaises() {
 
 function llenarCategorias() {
 
-    const cats = ["Amistad", "Ventas", "Gamers", "Educación", "Tecnología","Empleos y Trabajo","Cursos y Formación","Salud y Fitness","Viajes y Turismo","Series y Películas","Música","Ufo y Paranormal"];
+    const cats = ["","Amistad", "Ventas", "Gamers", "Educación", "Tecnología","Empleos y Trabajo","Cursos y Formación","Salud y Fitness","Viajes y Turismo","Series y Películas","Música","Ufo y Paranormal"];
 
     const selectCat = document.getElementById('categoria');
 
