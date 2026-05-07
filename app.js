@@ -220,7 +220,7 @@ formGrupo.onsubmit = async (e) => {
     } catch (err) {
         alert("Error de conexión con el servidor.");
     }
-
+};
 // --- 7. REPORTE ---
 function reportarGrupo(id) {
     if (confirm("¿Deseas reportar este enlace por contenido inapropiado o caído?")) {
