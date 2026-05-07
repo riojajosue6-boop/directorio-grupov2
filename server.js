@@ -56,6 +56,20 @@ app.post('/grupos', async (req, res) => {
         res.status(500).send("Error del servidor");
     }
 });
+// ... arriba están las conexiones y rutas de /grupos
+
+// --- AQUÍ LO PEGAS ---
+app.post('/grupos/:id/click', async (req, res) => {
+    const { id } = req.params;
+    try {
+        await pool.query('UPDATE grupos SET vistas = vistas + 1 WHERE id = $1', [id]);
+        res.status(200).send('Vista contabilizada');
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Error al actualizar vistas");
+    }
+});
+
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Servidor activo en puerto ${PORT}`);
