@@ -61,6 +61,11 @@ function renderizar(datos) {
         const nombreCat = CATEGORIAS_GLOBALES[g.categoria_id] || "Otros";
 
         return `
+        // Dentro del return de la función renderizar, debajo del país o descripción:
+            <div class="vistas-info" style="display: flex; align-items: center; gap: 5px; color: #94a3b8; font-size: 13px; margin-top: 5px;">
+                    <span class="material-icons" style="font-size: 16px;">visibility</span>
+                    <span>${g.vistas || 0} vistas</span>
+            </div>
             <div class="card ${clase}" id="grupo-${g.id}">
                 <div class="card-header">
                     <span class="categoria-tag">${nombreCat}</span>
@@ -74,7 +79,8 @@ function renderizar(datos) {
                 </p>
                 
                 <div style="display: flex; gap: 8px; margin-top: 12px;">
-                    <a href="${g.link}" target="_blank" class="btn-unirse" style="flex: 1;">Unirme</a>
+                    // Así debe quedar:
+                    <a href="${g.link}" onclick="registrarClick(${g.id})" target="_blank" class="btn-unirse" style="flex: 1;">Unirme</a>
                     <button onclick="reportarGrupo(${g.id})" class="btn-reportar" title="Reportar">
                         <span class="material-icons" style="font-size: 18px;">flag</span>
                     </button>
@@ -234,6 +240,18 @@ function reportarGrupo(id) {
         alert("Gracias. El reporte ha sido enviado para revisión técnica.");
     }
 }
+// Función para avisar al servidor del clic
+async function registrarClick(id) {
+    try {
+        await fetch(`${API_URL}/grupos/${id}/click`, { method: 'POST' });
+    } catch (error) {
+        console.error("No se pudo registrar la vista");
+    }
+// IMPORTANTE: En tu función renderizar, el botón debe quedar así:
+// <a href="${g.link}" onclick="registrarClick(${g.id})" target="_blank" class="btn-unirse">Unirme</a>
+}
+
+
 
 // INICIO AL CARGAR VENTANA
 window.onload = () => {
