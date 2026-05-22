@@ -403,3 +403,39 @@ footer {
     box-shadow: 0 6px 20px rgba(46, 160, 67, 0.6); /* Brilla más */
     background: linear-gradient(135deg, #2ea043 0%, #34b34c 100%);
 }
+/* Contenedor del nuevo botón */
+.upload-btn-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 20px;
+    padding: 0 15px;
+    box-sizing: border-box;
+}
+
+/* Estilo del botón "¡Publica tu Grupo Gratis Aquí!" */
+.btn-secundario-upload {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    max-width: 450px; /* Tamaño ideal en PC para que no se estire feo */
+    background: linear-gradient(135deg, #238636 0%, #2ea043 100%); /* Verde WhatsApp/GitHub */
+    color: #ffffff;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 14px 20px; /* Altura perfecta para el pulgar en móviles */
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(46, 160, 67, 0.4);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Efecto al pasar el mouse o tocarlo en el celular */
+.btn-secundario-upload:hover, .btn-secundario-upload:active {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(46, 160, 67, 0.6);
+    background: linear-gradient(135deg, #2ea043 0%, #34b34c 100%);
+}
