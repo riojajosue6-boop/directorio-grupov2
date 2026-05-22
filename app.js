@@ -24,6 +24,11 @@ const palabrasProhibidas = ['porno', 'sexo', 'xxx', 'dating', 'estafa', 'binance
 document.getElementById('btnAbrirForm').onclick = () => modal.style.display = "block";
 document.querySelector('.close').onclick = () => modal.style.display = "none";
 
+// Busca donde tienes el evento del primer botón y añade este:
+document.getElementById('btnAbrirForm2').addEventListener('click', () => {
+    document.getElementById('modalForm').style.display = 'block';
+});
+
 // --- 1. FUNCIÓN DE RENDERIZADO ---
 function renderizar(datos) {
     if (!datos || datos.length === 0) {
