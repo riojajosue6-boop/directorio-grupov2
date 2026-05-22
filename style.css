@@ -367,3 +367,39 @@ footer {
     text-overflow: ellipsis;
     cursor: help; /* Cambia el cursor a un signo de interrogación pequeño */
 }
+/* Contenedor para centrar el botón y darle aire */
+.upload-btn-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 20px 0 15px 0; /* Separa del buscador y de los filtros */
+    padding: 0 15px; /* Evita que choque en las esquinas de celulares pequeños */
+    box-sizing: border-box;
+}
+
+/* El botón llamativo estilo MundoGrupos */
+.btn-upload-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px; /* Espacio entre el icono y el texto */
+    width: 100%;
+    max-width: 500px; /* En PC no se estira demasiado, mantiene buen tamaño */
+    background: linear-gradient(135deg, #238636 0%, #2ea043 100%); /* Verde brillante tipo GitHub/WhatsApp */
+    color: #ffffff !important;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 14px 20px; /* Alto ideal para pulsarlo fácil con el pulgar */
+    border-radius: 8px; /* Bordes redondeados que combinan con tus tarjetas */
+    box-shadow: 0 4px 15px rgba(46, 160, 67, 0.4); /* Brillo sutil verde */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-align: center;
+}
+
+/* Efecto al pasar el mouse (PC) o tocarlo (Celular) */
+.btn-upload-group:hover, .btn-upload-group:active {
+    transform: translateY(-2px); /* Se eleva un poquito */
+    box-shadow: 0 6px 20px rgba(46, 160, 67, 0.6); /* Brilla más */
+    background: linear-gradient(135deg, #2ea043 0%, #34b34c 100%);
+}
