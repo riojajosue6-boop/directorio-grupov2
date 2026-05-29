@@ -48,7 +48,6 @@ app.post('/grupos', async (req, res) => {
         );
         res.json(nuevoGrupo.rows[0]);
     } catch (err) {
-        // --- AQUÍ ESTÁ LA MAGIA ---
         if (err.code === '23505') {
             return res.status(400).json({ error: "Este enlace de grupo ya está registrado en nuestra base de datos." });
         }
@@ -56,9 +55,8 @@ app.post('/grupos', async (req, res) => {
         res.status(500).send("Error del servidor");
     }
 });
-// ... arriba están las conexiones y rutas de /grupos
 
-// --- AQUÍ LO PEGAS ---
+// Registrar clics/vistas en los grupos
 app.post('/grupos/:id/click', async (req, res) => {
     const { id } = req.params;
     try {
@@ -70,6 +68,55 @@ app.post('/grupos/:id/click', async (req, res) => {
     }
 });
 
+// ==========================================
+// 🗺️ RUTA DEL SITEMAP DINÁMICO PARA GOOGLE
+// ==========================================
+app.get('/sitemap.xml', async (req, res) => {
+    try {
+        // 1. Páginas fijas de tu directorio
+        const paginasEstaticas = [
+            "https://mundogrupos.com/",
+            "https://mundogrupos.com/aviso-legal.html",
+            "https://mundogrupos.com/privacidad.html",
+            "https://mundogrupos.com/cookies.html",
+            "https://mundogrupos.com/guia-seguridad.html",
+            "https://mundogrupos.com/crecer-grupos.html"
+        ];
+
+        // 2. Traer todos los grupos de tu base de datos en Railway
+        const result = await pool.query('SELECT id FROM grupos');
+        const grupos = result.rows || [];
+
+        // 3. Empezar a armar la estructura XML que lee Google
+        let xml = '<?xml version="1.0" encoding="UTF-8"?>';
+        xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+
+        // Añadir las páginas estáticas
+        paginasEstaticas.forEach(url => {
+            xml += `<url><loc>${url}</loc><changefreq>daily</changefreq></url>`;
+        });
+
+        // Añadir cada grupo dinámicamente usando su ID real
+        grupos.forEach(grupo => {
+            const linkGrupo = `https://mundogrupos.com/grupo/${grupo.id}`;
+            xml += `<url><loc>${linkGrupo}</loc><changefreq>weekly</changefreq></url>`;
+        });
+
+        xml += '</urlset>';
+
+        // 4. Enviar el archivo XML oficial al buscador
+        res.header('Content-Type', 'application/xml');
+        res.status(200).send(xml);
+
+    } catch (err) {
+        console.error("Error al generar sitemap:", err.message);
+        res.status(500).send("Error interno del servidor");
+    }
+});
+
+// ==========================================
+// 🚀 ARRANQUE DEL SERVIDOR (Siempre al último)
+// ==========================================
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Servidor activo en puerto ${PORT}`);
