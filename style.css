@@ -439,3 +439,90 @@ footer {
     box-shadow: 0 6px 20px rgba(46, 160, 67, 0.6);
     background: linear-gradient(135deg, #2ea043 0%, #34b34c 100%);
 }
+/* Contenedor Principal del Banner */
+.banner-mundial-sticky {
+    position: sticky; /* Hace que se quede pegado arriba al hacer scroll */
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(90deg, #1e3c72 0%, #2a5298 100%); /* Azul profundo premium */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    z-index: 9999; /* Asegura que pase por encima de los grupos al deslizar */
+    padding: 10px 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Alineación del contenido interna */
+.banner-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap; /* Para que en celulares se acomode bien en vertical si es necesario */
+    padding: 0 15px;
+}
+
+/* Etiqueta EN VIVO parpadeante */
+.banner-badge {
+    background-color: #ff0000;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    animation: parpadeo 1.5s infinite; /* Animación para llamar la atención */
+}
+
+/* Texto del banner */
+.banner-text {
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 14px;
+    margin: 0;
+    text-align: center;
+}
+
+/* Botón de Acción Call To Action */
+.banner-btn {
+    background-color: #ffcc00; /* Amarillo oro del Mundial */
+    color: #111111;
+    font-weight: bold;
+    font-size: 13px;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+    display: inline-block;
+}
+
+/* Efecto al pasar el mouse por encima */
+.banner-btn:hover {
+    background-color: #ffe066;
+    transform: scale(1.05);
+}
+
+/* Animación del parpadeo en CSS */
+@keyframes parpadeo {
+    0% { opacity: 1; }
+    50% { opacity: 0.4; }
+    100% { opacity: 1; }
+}
+
+/* Ajustes específicos para pantallas de celular */
+@media (max-width: 768px) {
+    .banner-content {
+        gap: 8px;
+        flex-direction: column; /* Se alinea en torre para que no se corte en pantallas chicas */
+    }
+    .banner-text {
+        font-size: 13px;
+    }
+    .banner-btn {
+        width: 100%;
+        text-align: center;
+        padding: 6px 12px;
+    }
+}
