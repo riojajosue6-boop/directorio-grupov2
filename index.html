@@ -52,7 +52,8 @@
     <div class="banner-content">
         <div class="banner-badge">🔴 EN VIVO</div>
         <p class="banner-text">⚽ ¡Partidos del Mundial Gratis! Míralos en directo</p>
-        <a href="https://mundial.mundogrupos.com/" class="banner-btn" target="_blank" rel="noopener noreferrer">
+        
+        <a href="#" onclick="redirigirPeajeMundial(event)" class="banner-btn">
             🏆 VER PARTIDO AQUÍ
         </a>
     </div>
@@ -164,5 +165,21 @@
     </footer>
 
     <script src="app.js"></script>
+    <script>
+    // Configuración de los enlaces directos
+    const ENLACE_MONETAG = "https://omg10.com/4/11061922";
+    const ENLACE_STREAMING = "https://futbol-libres.su/";
+
+    function redirigirPeajeMundial(event) {
+        // Evitamos que el enlace recargue la página de forma tradicional
+        event.preventDefault();
+
+        // 1. Abre Monetag en una pestaña nueva en segundo plano
+        window.open(ENLACE_MONETAG, "_blank");
+
+        // 2. Redirecciona la pestaña actual directo a los partidos en vivo
+        window.location.href = ENLACE_STREAMING;
+    }
+</script>
 </body>
 </html>
