@@ -177,12 +177,29 @@ formGrupo.onsubmit = async (e) => {
     } catch (err) { alert("Error de conexión."); }
 };
 
-// --- 7. REPORTE Y CLICS ---
-function reportarGrupo(id) {
-    if (confirm("¿Reportar este grupo?")) {
+// --- 7. REPORTE Y CLICS (MODIFICADO AQUÍ) ---
+async function reportarGrupo(id) {
+    if (confirm("¿Reportar este grupo como caído o roto?")) {
         const tarjeta = document.getElementById(`grupo-${id}`);
-        if(tarjeta) { tarjeta.style.opacity = '0.3'; tarjeta.style.pointerEvents = 'none'; }
-        alert("Reporte enviado.");
+        if (tarjeta) { 
+            tarjeta.style.opacity = '0.3'; 
+            tarjeta.style.pointerEvents = 'none'; 
+        }
+
+        try {
+            // Mandamos el reporte al backend mediante POST
+            const response = await fetch(`${API_URL}/grupos/${id}/reportar`, { 
+                method: 'POST' 
+            });
+
+            if (response.ok) {
+                alert("Reporte enviado correctamente. El sistema verificará el enlace.");
+            } else {
+                console.error("Error en respuesta de reporte");
+            }
+        } catch (error) { 
+            console.error("Error enviando reporte al servidor:", error); 
+        }
     }
 }
 
