@@ -28,9 +28,11 @@ app.get('/', (req, res) => {
 });
 
 // Obtener grupos (MODIFICADO: Solo trae los que están en estado 'aprobado')
+// Obtener grupos (CORREGIDO: Ignora mayúsculas/minúsculas y trae los aprobados)
 app.get('/grupos', async (req, res) => {
     try {
-        const result = await pool.query("SELECT * FROM grupos WHERE estado = 'aprobado'");
+        // LOWER(estado) asegura que encuentre 'Aprobado', 'aprobado' o 'APROBADO' sin problemas
+        const result = await pool.query("SELECT * FROM grupos WHERE LOWER(estado) = 'aprobado'");
         res.json(result.rows || []);
     } catch (err) {
         console.error("Error en base de datos:", err.message);
@@ -104,7 +106,8 @@ app.get('/sitemap.xml', async (req, res) => {
         ];
 
         // 2. Traer solo los grupos aprobados (MODIFICADO para no indexar enlaces rotos)
-        const result = await pool.query("SELECT id FROM grupos WHERE estado = 'aprobado'");
+        // Cambia la línea del sitemap por esta:
+        const result = await pool.query("SELECT id FROM grupos WHERE LOWER(estado) = 'aprobado'");
         const grupos = result.rows || [];
 
         // 3. Empezar a armar la estructura XML que lee Google
