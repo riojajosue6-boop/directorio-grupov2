@@ -40,12 +40,13 @@ app.get('/grupos', async (req, res) => {
     }
 });
 
-// Guardar nuevo grupo
+// Guardar nuevo grupo (CORREGIDO: Entra aprobado por defecto)
 app.post('/grupos', async (req, res) => {
     const { nombre, descripcion, link, pais, plataforma_id, categoria_id } = req.body;
     try {
+        // Añadimos 'aprobado' directamente en la consulta como valor por defecto
         const nuevoGrupo = await pool.query(
-            "INSERT INTO grupos (nombre, descripcion, link, pais, plataforma_id, categoria_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+            "INSERT INTO grupos (nombre, descripcion, link, pais, plataforma_id, categoria_id, estado) VALUES ($1, $2, $3, $4, $5, $6, 'aprobado') RETURNING *",
             [nombre, descripcion, link, pais, plataforma_id, categoria_id]
         );
         res.json(nuevoGrupo.rows[0]);
