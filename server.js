@@ -41,10 +41,24 @@ app.get('/grupos', async (req, res) => {
 });
 
 // Guardar nuevo grupo (CORREGIDO: Entra aprobado por defecto)
+// Guardar nuevo grupo (CORREGIDO: Aprobado por defecto + Limpiador de Discord)
 app.post('/grupos', async (req, res) => {
-    const { nombre, descripcion, link, pais, plataforma_id, categoria_id } = req.body;
+    let { nombre, descripcion, link, pais, plataforma_id, categoria_id } = req.body;
+    
     try {
-        // Añadimos 'aprobado' directamente en la consulta como valor por defecto
+        // --- 🛡️ LIMPIADOR DE ENLACES DE DISCORD (plataforma_id == 3) ---
+        if (plataforma_id === 3 && link) {
+            let limpio = link.trim();
+            
+            // Si no empieza con http:// o https://, se lo agregamos
+            if (!limpio.startsWith('http://') && !limpio.startsWith('https://')) {
+                limpio = 'https://' + limpio;
+            }
+            
+            link = limpio;
+        }
+
+        // Insertamos el grupo con el link limpio y aprobado por defecto
         const nuevoGrupo = await pool.query(
             "INSERT INTO grupos (nombre, descripcion, link, pais, plataforma_id, categoria_id, estado) VALUES ($1, $2, $3, $4, $5, $6, 'aprobado') RETURNING *",
             [nombre, descripcion, link, pais, plataforma_id, categoria_id]
