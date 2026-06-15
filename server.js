@@ -27,10 +27,10 @@ app.get('/', (req, res) => {
     res.send('Servidor de MundoGrupos funcionando correctamente');
 });
 
-// Obtener grupos
+// Obtener grupos (MODIFICADO: Solo trae los que están en estado 'aprobado')
 app.get('/grupos', async (req, res) => {
     try {
-        const result = await pool.query('SELECT * FROM grupos');
+        const result = await pool.query("SELECT * FROM grupos WHERE estado = 'aprobado'");
         res.json(result.rows || []);
     } catch (err) {
         console.error("Error en base de datos:", err.message);
@@ -69,6 +69,26 @@ app.post('/grupos/:id/click', async (req, res) => {
 });
 
 // ==========================================
+// 🛡️ NUEVA RUTA: REGISTRAR REPORTES AUTOMÁTICOS
+// ==========================================
+app.post('/grupos/:id/reportar', async (req, res) => {
+    const { id } = req.params;
+    try {
+        // 1. Sumamos 1 a la columna reportes
+        await pool.query('UPDATE grupos SET reportes = reportes + 1 WHERE id = $1', [id]);
+
+        // 2. Verificamos si ese grupo ya acumuló 3 o más reportes
+        // Si llega a 3, cambia su estado a 'pendiente' para ocultarlo automáticamente
+        await pool.query("UPDATE grupos SET estado = 'pendiente' WHERE id = $1 AND reportes >= 3", [id]);
+
+        res.status(200).send('Reporte procesado con éxito');
+    } catch (err) {
+        console.error("Error al procesar reporte:", err.message);
+        res.status(500).send("Error al actualizar reportes");
+    }
+});
+
+// ==========================================
 // 🗺️ RUTA DEL SITEMAP DINÁMICO PARA GOOGLE
 // ==========================================
 app.get('/sitemap.xml', async (req, res) => {
@@ -83,8 +103,8 @@ app.get('/sitemap.xml', async (req, res) => {
             "https://mundogrupos.com/crecer-grupos.html"
         ];
 
-        // 2. Traer todos los grupos de tu base de datos en Railway
-        const result = await pool.query('SELECT id FROM grupos');
+        // 2. Traer solo los grupos aprobados (MODIFICADO para no indexar enlaces rotos)
+        const result = await pool.query("SELECT id FROM grupos WHERE estado = 'aprobado'");
         const grupos = result.rows || [];
 
         // 3. Empezar a armar la estructura XML que lee Google
